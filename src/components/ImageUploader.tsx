@@ -40,7 +40,7 @@ export function ImageUploader({
     const next = [...images];
     const target = index + dir;
     if (target < 0 || target >= next.length) return;
-    [next[index], next[target]] = [next[target], next[index]];
+    [next[index], next[target]] = [next[target] as string, next[index] as string];
     onChange(next);
   }
 

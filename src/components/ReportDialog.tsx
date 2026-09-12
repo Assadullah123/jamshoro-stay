@@ -26,7 +26,7 @@ const REASONS = [
 
 export function ReportDialog({ listingId }: { listingId: string }) {
   const [open, setOpen] = useState(false);
-  const [reason, setReason] = useState(REASONS[0]);
+  const [reason, setReason] = useState<string>(REASONS[0] as string);
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState(false);
 
