@@ -6,7 +6,6 @@ import {
   BedDouble,
   CalendarClock,
   Check,
-  Flag,
   MapPin,
   MessageCircle,
   Phone,
@@ -246,11 +245,7 @@ function ListingDetails() {
       </section>
 
       <div className="mt-6">
-        <ReportDialog listingId={listing.id}>
-          <Button variant="ghost" size="sm" className="text-muted-foreground">
-            <Flag /> Report this listing
-          </Button>
-        </ReportDialog>
+        <ReportDialog listingId={listing.id} />
       </div>
 
       {contacts[0] ? (

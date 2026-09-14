@@ -25,7 +25,7 @@ export const Route = createFileRoute("/profile")({
 });
 
 function Profile() {
-  const { user, loading, role } = useAuth();
+  const { user, loading, roles } = useAuth();
   const navigate = useNavigate();
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
@@ -85,7 +85,7 @@ function Profile() {
             </div>
             <div>
               <Label>Account type</Label>
-              <Input value={role ?? "student"} disabled />
+              <Input value={roles[0] ?? "student"} disabled />
             </div>
             <div>
               <Label htmlFor="fn">Full name</Label>

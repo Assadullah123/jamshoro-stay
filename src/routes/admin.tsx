@@ -91,11 +91,9 @@ function Admin() {
   }
 
   const rows = listings ?? [];
-  const groups: Record<string, Listing[]> = {
-    pending: rows.filter((l) => l.status === "pending"),
-    approved: rows.filter((l) => l.status === "approved"),
-    rejected: rows.filter((l) => l.status === "rejected"),
-  };
+  const pendingRows = rows.filter((l) => l.status === "pending");
+  const approvedRows = rows.filter((l) => l.status === "approved");
+  const rejectedRows = rows.filter((l) => l.status === "rejected");
 
   function ListingRows({ items }: { items: Listing[] }) {
     if (isLoading) return <Skeleton className="h-24 w-full rounded-xl" />;
@@ -155,19 +153,19 @@ function Admin() {
       <h1 className="text-xl font-bold">Moderation</h1>
       <Tabs defaultValue="pending" className="mt-4">
         <TabsList>
-          <TabsTrigger value="pending">Pending ({groups.pending?.length ?? 0})</TabsTrigger>
+          <TabsTrigger value="pending">Pending ({pendingRows.length})</TabsTrigger>
           <TabsTrigger value="approved">Approved</TabsTrigger>
           <TabsTrigger value="rejected">Rejected</TabsTrigger>
           <TabsTrigger value="reports">Reports ({reports?.length ?? 0})</TabsTrigger>
         </TabsList>
         <TabsContent value="pending">
-          <ListingRows items={groups.pending ?? []} />
+          <ListingRows items={pendingRows} />
         </TabsContent>
         <TabsContent value="approved">
-          <ListingRows items={groups.approved ?? []} />
+          <ListingRows items={approvedRows} />
         </TabsContent>
         <TabsContent value="rejected">
-          <ListingRows items={groups.rejected ?? []} />
+          <ListingRows items={rejectedRows} />
         </TabsContent>
         <TabsContent value="reports">
           <div className="space-y-3 pt-3">
