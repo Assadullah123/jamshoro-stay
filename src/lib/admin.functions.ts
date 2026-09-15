@@ -23,6 +23,7 @@ export type AdminUser = {
   last_sign_in_at: string | null;
   roles: Role[];
   listing_count: number;
+  banned: boolean;
 };
 
 export const listUsers = createServerFn({ method: "GET" })
