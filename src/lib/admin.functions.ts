@@ -63,6 +63,7 @@ export const listUsers = createServerFn({ method: "GET" })
       last_sign_in_at: u.last_sign_in_at ?? null,
       roles: roleMap.get(u.id) ?? [],
       listing_count: countMap.get(u.id) ?? 0,
+      banned: Boolean((u as { banned_until?: string | null }).banned_until),
     }));
   });
 
