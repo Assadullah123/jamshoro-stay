@@ -1,13 +1,23 @@
 import { useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { GraduationCap, MapPin, Search, ShieldCheck, Users } from "lucide-react";
+import { ArrowRight, GraduationCap, MapPin, Search, ShieldCheck, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ListingCard, ListingCardSkeleton } from "@/components/ListingCard";
 import { AREAS, CAMPUSES, QUICK_FILTERS } from "@/lib/constants";
 import { fetchPublicListings } from "@/lib/listings";
 import { cn } from "@/lib/utils";
+import heroImage from "@/assets/hero-jamshoro.jpg";
+import uosGate from "@/assets/campus-uos.jpg";
+import muetGate from "@/assets/campus-muet.jpg";
+import lumhsGate from "@/assets/campus-lumhs.jpg";
+
+const CAMPUS_IMAGES: Record<string, string> = {
+  uos: uosGate,
+  muet: muetGate,
+  lumhs: lumhsGate,
+};
 
 export const Route = createFileRoute("/")({
   head: () => ({
