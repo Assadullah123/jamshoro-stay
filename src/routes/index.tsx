@@ -1,13 +1,23 @@
 import { useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { GraduationCap, MapPin, Search, ShieldCheck, Users } from "lucide-react";
+import { ArrowRight, GraduationCap, MapPin, Search, ShieldCheck, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ListingCard, ListingCardSkeleton } from "@/components/ListingCard";
 import { AREAS, CAMPUSES, QUICK_FILTERS } from "@/lib/constants";
 import { fetchPublicListings } from "@/lib/listings";
 import { cn } from "@/lib/utils";
+import heroImage from "@/assets/hero-jamshoro.jpg";
+import uosGate from "@/assets/campus-uos.jpg";
+import muetGate from "@/assets/campus-muet.jpg";
+import lumhsGate from "@/assets/campus-lumhs.jpg";
+
+const CAMPUS_IMAGES: Record<string, string> = {
+  uos: uosGate,
+  muet: muetGate,
+  lumhs: lumhsGate,
+};
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -48,37 +58,29 @@ function Home() {
 
   return (
     <div>
-      <section className="border-b border-border bg-gradient-to-b from-primary/5 to-background">
-        <div className="mx-auto max-w-5xl px-4 py-10 text-center sm:py-14">
-          <h1 className="text-3xl font-bold tracking-tight text-primary sm:text-4xl">
-            Student housing in Jamshoro & Kotri
+      <section className="relative isolate overflow-hidden">
+        <img
+          src={heroImage}
+          alt="Aerial view of Jamshoro at sunset with the Indus river and Kotri bridge"
+          width={1920}
+          height={1088}
+          className="absolute inset-0 -z-10 size-full object-cover"
+        />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/90 via-primary/80 to-primary/95" />
+        <div className="mx-auto max-w-5xl px-4 py-14 text-primary-foreground sm:py-20">
+          <span className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/25 bg-primary-foreground/10 px-3 py-1 text-xs font-medium backdrop-blur">
+            <MapPin className="size-3.5" /> Jamshoro · Kotri · UoS · MUET · LUMHS
+          </span>
+          <h1 className="mt-4 max-w-2xl text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+            Student housing in Jamshoro, made simple
           </h1>
-          <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground">
-            Hostels, rooms and roommates near University of Sindh, MUET and LUMHS — with real
-            photos and direct contact numbers.
+          <p className="mt-3 max-w-xl text-sm opacity-90 sm:text-base">
+            Hostels, private rooms and roommates near your campus — with real photos, honest rent
+            and direct contact numbers.
           </p>
 
-          <div className="mt-7 grid gap-3 sm:grid-cols-2">
-            <button
-              onClick={() => go({ gender: "boys" })}
-              className="group rounded-2xl border-2 border-primary bg-primary p-6 text-left text-primary-foreground shadow-card transition-transform hover:-translate-y-0.5"
-            >
-              <Users className="mb-2 size-7" />
-              <p className="text-lg font-bold">Find Boys&apos; Accommodation</p>
-              <p className="text-xs opacity-80">Hostels & rooms for male students</p>
-            </button>
-            <button
-              onClick={() => go({ gender: "girls" })}
-              className="group rounded-2xl border-2 border-accent bg-accent p-6 text-left text-accent-foreground shadow-card transition-transform hover:-translate-y-0.5"
-            >
-              <Users className="mb-2 size-7" />
-              <p className="text-lg font-bold">Find Girls&apos; Accommodation</p>
-              <p className="text-xs opacity-90">Hostels & rooms for female students</p>
-            </button>
-          </div>
-
           <form
-            className="mt-6 flex gap-2"
+            className="mt-7 flex flex-col gap-2 rounded-2xl border border-primary-foreground/15 bg-background/95 p-2 shadow-card backdrop-blur sm:flex-row"
             onSubmit={(e) => {
               e.preventDefault();
               go(q.trim() ? { q: q.trim() } : {});
@@ -89,60 +91,96 @@ function Home() {
               <Input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Search by campus or nearby area..."
-                className="h-12 rounded-xl pl-9"
+                placeholder="Search by campus, area or hostel name..."
+                className="h-12 border-0 bg-transparent pl-9 shadow-none focus-visible:ring-0"
                 aria-label="Search hostels"
               />
             </div>
-            <Button type="submit" size="xl">
+            <Button type="submit" size="xl" className="rounded-xl">
               Search
             </Button>
           </form>
 
-          <div className="mt-4 space-y-2 text-left">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Campuses
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {CAMPUSES.map((c) => (
-                <button
-                  key={c.id}
-                  onClick={() => go({ campus: c.id })}
-                  className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium hover:border-accent"
-                >
-                  <GraduationCap className="size-3.5 text-accent" /> {c.short}
-                </button>
-              ))}
-            </div>
-            <p className="pt-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Areas & landmarks
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {AREAS.filter((a) => a !== "Other").map((a) => (
-                <button
-                  key={a}
-                  onClick={() => go({ area: a })}
-                  className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium hover:border-accent"
-                >
-                  <MapPin className="size-3.5 text-accent" /> {a}
-                </button>
-              ))}
-            </div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <button
+              onClick={() => go({ gender: "boys" })}
+              className="flex items-center justify-between rounded-2xl border border-primary-foreground/20 bg-primary-foreground/10 p-4 text-left backdrop-blur transition-colors hover:bg-primary-foreground/20"
+            >
+              <span>
+                <span className="block text-base font-bold">Boys&apos; accommodation</span>
+                <span className="text-xs opacity-80">Hostels & rooms for male students</span>
+              </span>
+              <ArrowRight className="size-5" />
+            </button>
+            <button
+              onClick={() => go({ gender: "girls" })}
+              className="flex items-center justify-between rounded-2xl border border-accent/40 bg-accent/90 p-4 text-left text-accent-foreground transition-colors hover:bg-accent"
+            >
+              <span>
+                <span className="block text-base font-bold">Girls&apos; accommodation</span>
+                <span className="text-xs opacity-90">Hostels & rooms for female students</span>
+              </span>
+              <ArrowRight className="size-5" />
+            </button>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-5xl px-4 py-8">
+      <section className="mx-auto max-w-5xl px-4 py-10">
+        <h2 className="text-lg font-bold">Browse by campus</h2>
+        <p className="text-sm text-muted-foreground">
+          Pick your university to see the closest hostels first.
+        </p>
+        <div className="mt-4 grid gap-4 sm:grid-cols-3">
+          {CAMPUSES.map((c) => (
+            <button
+              key={c.id}
+              onClick={() => go({ campus: c.id })}
+              className="group relative overflow-hidden rounded-2xl border border-border text-left shadow-card transition-transform hover:-translate-y-1"
+            >
+              <img
+                src={CAMPUS_IMAGES[c.id] ?? uosGate}
+                alt={`Main gate of ${c.name}`}
+                loading="lazy"
+                width={1200}
+                height={800}
+                className="h-40 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-4 text-primary-foreground">
+                <p className="flex items-center gap-1.5 text-base font-bold">
+                  <GraduationCap className="size-4" /> {c.short}
+                </p>
+                <p className="text-xs opacity-85">{c.name}</p>
+              </div>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-5xl px-4 pb-4">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          Popular areas
+        </h2>
+        <div className="flex flex-wrap gap-2">
+          {AREAS.filter((a) => a !== "Other").map((a) => (
+            <button
+              key={a}
+              onClick={() => go({ area: a })}
+              className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-3.5 py-2 text-xs font-medium transition-colors hover:border-accent hover:text-accent"
+            >
+              <MapPin className="size-3.5 text-accent" /> {a}
+            </button>
+          ))}
+        </div>
+        <h2 className="mb-3 mt-6 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
           Quick filters
         </h2>
         <div className="flex flex-wrap gap-2">
           {QUICK_FILTERS.map((f) => (
             <button
               key={f.key}
-              onClick={() =>
-                go(f.key === "budget" ? { maxRent: "6000" } : { amenities: f.key })
-              }
+              onClick={() => go(f.key === "budget" ? { maxRent: "6000" } : { amenities: f.key })}
               className={cn(
                 "rounded-full border border-border bg-card px-4 py-2 text-sm font-medium transition-colors hover:border-accent hover:text-accent",
               )}
