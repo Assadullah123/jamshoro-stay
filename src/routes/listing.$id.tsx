@@ -26,6 +26,7 @@ import {
   whatsappUrl,
 } from "@/lib/constants";
 import { fetchListing } from "@/lib/listings";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/listing/$id")({
   head: () => ({
@@ -54,6 +55,7 @@ export const Route = createFileRoute("/listing/$id")({
 function ListingDetails() {
   const { id } = Route.useParams();
   const [active, setActive] = useState(0);
+  const { user } = useAuth();
   const { data: listing, isLoading } = useQuery({
     queryKey: ["listing", id],
     queryFn: () => fetchListing(id),
@@ -212,7 +214,16 @@ function ListingDetails() {
       <section className="mt-6">
         <h2 className="text-lg font-semibold">Contact</h2>
         <div className="mt-2 space-y-2">
-          {contacts.length ? (
+          {!user ? (
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border p-4">
+              <p className="text-sm text-muted-foreground">
+                Sign in to see the owner's phone and WhatsApp number.
+              </p>
+              <Button asChild size="sm">
+                <Link to="/auth">Sign in</Link>
+              </Button>
+            </div>
+          ) : contacts.length ? (
             contacts.map((c, i) => (
               <div
                 key={c.id ?? i}
