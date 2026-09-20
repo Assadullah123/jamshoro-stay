@@ -26,6 +26,7 @@ import {
   whatsappUrl,
 } from "@/lib/constants";
 import { fetchListing } from "@/lib/listings";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Route = createFileRoute("/listing/$id")({
   head: () => ({
